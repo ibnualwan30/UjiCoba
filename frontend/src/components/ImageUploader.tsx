@@ -1,21 +1,32 @@
-// src/components/ImageUploader.jsx
 import { useState, useRef } from 'react';
 import { FaCamera, FaUpload, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-const ImageUploader = ({ onImageUpload, isLoading }) => {
-  const [preview, setPreview] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef(null);
+// Definisi tipe untuk props
+interface ImageUploaderProps {
+  onImageUpload: (file: File) => void;
+  isLoading: boolean;
+}
+
+// Definisi tipe untuk state
+interface PreviewState {
+  preview: string | null;
+  isDragging: boolean;
+}
+
+const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, isLoading }) => {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Handle file selection
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    handleFile(file);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFile(file);
   };
   
   // Handle file drop
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
     
@@ -25,7 +36,7 @@ const ImageUploader = ({ onImageUpload, isLoading }) => {
   };
   
   // Handle drag events
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
